@@ -1,0 +1,10 @@
+Notes:
+1) assuming resgiter is a seperate page, while sign in is done on the current page.
+2) assuming dashboard is unreachable unless logged in, else will need to do some restful services to change how pages are rendered depending on if logged in || !
+3) 
+
+
+TODO:
+1) need to change topleft mobi link when logged in to go to dashboard.html(logged in) instead of index.html(logged out)
+2) handle log in (let parse handle it?), then change all signup links to log out links (simple jquery if statement?)
+

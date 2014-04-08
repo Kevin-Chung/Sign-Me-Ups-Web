@@ -4,8 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <link href="https://fonts.googleapis.com/css?family=Limelight|Flamenco|Federo|Yesteryear|Josefin Sans|Spinnaker|Sansita One|Handlee|Droid Sans|Oswald:400,300,700" media="screen
+    " rel="stylesheet" type="text/css" />
     <link href="https://fonts.googleapis.com/css?family=Limelight|Flamenco|Federo|Yesteryear|Josefin Sans|Spinnaker|Sansita One|Handlee|Droid Sans|Oswald:400,300,700" media="screen" rel="stylesheet" type="text/css" />
-        <link href="https://fonts.googleapis.com/css?family=Limelight|Flamenco|Federo|Yesteryear|Josefin Sans|Spinnaker|Sansita One|Handlee|Droid Sans|Oswald:400,300,700" media="screen" rel="stylesheet" type="text/css" />
     <link href="stylesheets/bootstrap.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="stylesheets/bootstrap-responsive.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="stylesheets/common.css" media="screen" rel="stylesheet" type="text/css" />
@@ -40,27 +42,35 @@
           <div class="nav-collapse collapse">
             <ul class="nav">
               <li>
-                <a href="#">Dashboard <i class="icon icon-dashboard"></i> 
+                <a href="Dashboard.html">Dashboard <i class="icon icon-dashboard"></i> 
                 </a>
               </li>
 
               <li>
-                <a href="#">Help &amp; Feedback <i class="icon icon-user-md"></i> 
+                <a href="Feedback.html">Help &amp; Feedback <i class="icon icon-user-md"></i> 
                 </a>
               </li>
             
             </ul><ul class="nav pull-right">
-                <li class="dropdown">
-                    <a id="dropdownMenu1" class="dropdown-toggle" role="button" data-toggle="dropdown">Sigaan In
-                        <strong classs="caret"></strong>
-                    </a>
-                    <div class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" style="padding: 15px; padding-bottom: 0px;">
-                      <input id="user_email" type="text" placeholder="Email" />
-                      <input id="user_password" type="password" placeholder="Password" />
-                      <button id="signInBtn" class="btn btn-primary" style="clear: left; width: 100%; height: 32px; font-size: 13px;" type="submit" name="commit">Sign In</button>
-                      <br />
-                      <br />
-                    </div>
+              <li>
+                <a href="Register.html">Register</a>
+              </li>
+
+              <li class="singInOutToggle" hidden>
+                <a href="#" role="button" id="logOutButton">Log Out</a>
+              </li>
+
+              <li class="dropdown singInOutToggle">
+                  <a id="dropdownMenu1" class="dropdown-toggle" role="button" data-toggle="dropdown">Sign In
+                      <strong classs="caret"></strong>
+                  </a>
+                  <div class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" style="padding: 15px; padding-bottom: 0px;">
+                    <input id="user_email" type="text" placeholder="Email" />
+                    <input id="user_password" type="password" placeholder="Password" />
+                    <button id="signInBtn" class="btn btn-primary" style="clear: left; width: 100%; height: 32px; font-size: 13px;" type="submit" name="commit">Sign In</button>
+                    <br />
+                    <br />
+                  </div>
                 </li>
             </ul>
           </div>
@@ -85,34 +95,7 @@
         </div>
       </div>
     </div>
-    <div class="container-fluid">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Column 1</th>
-            <th>Column 2</th>
-            <th>Column 3</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Text can go here</td>
-            <td>Text can go here</td>
-            <td>Text can go here</td>
-          </tr>
-          <tr>
-            <td>Text can go here</td>
-            <td>Text can go here</td>
-            <td>Text can go here</td>
-          </tr>
-          <tr>
-            <td>Text can go here</td>
-            <td>Text can go here</td>
-            <td>Text can go here</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+
     <div class="container-fluid">
       <div class="hero-unit">
         <h1 class="heading">Register!</h1>
@@ -123,35 +106,76 @@
       </div>
     </div>
     <script>
-        //initializing a test DB named tada
-        Parse.initialize("WGj60IjSG3BkThHlb8VpXVYGqbvaSIQ6mXh9NQEU", "LYMRAuQzkCO6xs9bikggjgEOMf1FFmpCB7hYY7Zz");
+
+       user = new Parse.User();
+       //Initialize Campus Synergy DB to access the User table for logins
+
+       Parse.initialize("QuoI3WPv5g9LyP4awzhZEH8FvRKIgWgFEdFJSTmB", "lsdwkYQTwv0mTcFQWvK33gZ5ISRCCbMfPrA0AJ9j");
 
         $('#signInBtn').click(function() {
+          
+          
+          
+          var userEmail=$("#user_email").val();
+          var userPassword=$("#user_password").val();
+          //alert("User email:"+userEmail+" User password"+userPassword);
 
-          var tableClass = Parse.Object.extend("Members");
-          //var tableInstance = new Parse.Query(tableClass);
-          var checkEmail = new Parse.Query("Members").equalTo("Email", $("#user_email").val());
-          //  alert(checkEmail.val());
-          //var checkIfActive = new Parse.Query("Members").equalTo("active", "Y");
-          var mainQuery = checkEmail.equalTo("active", "Y");
-          var test = $("#user_email").val();
+          Parse.User.logIn(userEmail, userPassword, {
+            success: function(user) {
 
-          mainQuery.find({
+              //alert("signed in as:" +user.getUsername()+"");
+              //sign in button changed to sign out button
+              $('.singInOutToggle').toggle();
+              
 
-              success: function(results) {
-                //if there is no email
-                if(results.length<1){
-                  alert("User login was not found");
-                }
-                else{
-                  //set user login with parse
-                  
-                }
-              }
+            },
+            error: function(user, error) {
+              alert("fail");
+            }
           });
+        });
 
-      });
+        $('#logOutButton').click(function(){
+          
+          Parse.User.logOut();
+
+          //nulls out current user data
+          user=Parse.User.current();
+
+          $('.singInOutToggle').toggle();
+
+        });
+
+
     </script>
+    <!-- static variable to check if someone is logged in?-->
+    <!-- parse user._session look into it saves to disk
+      https://www.parse.com/docs/js/symbols/Parse.User.html#.become
+    -->
+
+    <!--
+      test script to see if multiple parse data objects can be used on one page.
+    <script>
+     $('#testbtn').click(function() {
+        //Initialize Mobi Sign ups DB
+        Parse.initialize("WGj60IjSG3BkThHlb8VpXVYGqbvaSIQ6mXh9NQEU", "LYMRAuQzkCO6xs9bikggjgEOMf1FFmpCB7hYY7Zz");
+        var Members = Parse.Object.extend("Members");
+        var query = new Parse.Query(Members);
+        query.equalTo("Name", "Kevin Chung");
+        query.find({
+          success: function(results) {
+            //alert("Successfully retrieved " + results.length + " scores.");
+            var name = results[0];
+            alert(""+name.get("mavid"));
+          },
+          error: function(error) {
+            alert("Error: " + error.code + " " + error.message);
+          }
+        });
+      }
+      );
+    </script>
+  -->
 
 
   </body>
