@@ -53,14 +53,14 @@
             
             </ul><ul class="nav pull-right">
               <li>
-                <a href="Register.html">Register</a>
+                <a href="Register.html" id="registerToggle">Register</a>
               </li>
 
-              <li class="singInOutToggle" hidden>
+              <li class="signInOutToggle" hidden>
                 <a href="#" role="button" id="logOutButton">Log Out</a>
               </li>
 
-              <li class="dropdown singInOutToggle">
+              <li class="dropdown signInOutToggle">
                   <a id="dropdownMenu1" class="dropdown-toggle" role="button" data-toggle="dropdown">Sign In
                       <strong classs="caret"></strong>
                   </a>
@@ -72,6 +72,7 @@
                     <br />
                   </div>
                 </li>
+
             </ul>
           </div>
         </div>
@@ -87,7 +88,7 @@
           </li>
         </ul>
         <div class="hero-unit">
-          <h1 class="heading">Why Sign Me Ups?</h1>
+          <h1 class="heading" id="switch">Why Sign Me Ups?</h1>
           <p>Because we say so...</p>
           <div class="btns">
             <a href="#" class="btn btn-primary btn-large">Learn More</a>
@@ -105,79 +106,50 @@
         </div>
       </div>
     </div>
-    <script>
 
-       user = new Parse.User();
-       //Initialize Campus Synergy DB to access the User table for logins
-
+<script>
+      //initialize parse for CAMPUS SYNERGY
        Parse.initialize("QuoI3WPv5g9LyP4awzhZEH8FvRKIgWgFEdFJSTmB", "lsdwkYQTwv0mTcFQWvK33gZ5ISRCCbMfPrA0AJ9j");
+       //variable used to check if user is logged in or not
+       loggedIn = false;
+       //check if user session data is already on disk
+       user = Parse.User.current();
+       if(user!=null){
+        loggedIn=true;
+        $('#logOutButton').text("Logout of "+user.getUsername());        
+        $('.signInOutToggle').toggle();
+        $('#registerToggle').toggle();
+      }
+      else{
+        loggedIn=false;
+      }
 
-        $('#signInBtn').click(function() {
-          
-          
-          
-          var userEmail=$("#user_email").val();
-          var userPassword=$("#user_password").val();
-          //alert("User email:"+userEmail+" User password"+userPassword);
+      $('#signInBtn').click(function() {
+        var userEmail=$("#user_email").val();
+        var userPassword=$("#user_password").val();
 
-          Parse.User.logIn(userEmail, userPassword, {
-            success: function(user) {
-
-              //alert("signed in as:" +user.getUsername()+"");
-              //sign in button changed to sign out button
-              $('.singInOutToggle').toggle();
-              
-
-            },
-            error: function(user, error) {
-              alert("fail");
-            }
-          });
-        });
-
-        $('#logOutButton').click(function(){
-          
-          Parse.User.logOut();
-
-          //nulls out current user data
-          user=Parse.User.current();
-
-          $('.singInOutToggle').toggle();
-
-        });
-
-
-    </script>
-    <!-- static variable to check if someone is logged in?-->
-    <!-- parse user._session look into it saves to disk
-      https://www.parse.com/docs/js/symbols/Parse.User.html#.become
-    -->
-
-    <!--
-      test script to see if multiple parse data objects can be used on one page.
-    <script>
-     $('#testbtn').click(function() {
-        //Initialize Mobi Sign ups DB
-        Parse.initialize("WGj60IjSG3BkThHlb8VpXVYGqbvaSIQ6mXh9NQEU", "LYMRAuQzkCO6xs9bikggjgEOMf1FFmpCB7hYY7Zz");
-        var Members = Parse.Object.extend("Members");
-        var query = new Parse.Query(Members);
-        query.equalTo("Name", "Kevin Chung");
-        query.find({
-          success: function(results) {
-            //alert("Successfully retrieved " + results.length + " scores.");
-            var name = results[0];
-            alert(""+name.get("mavid"));
+        Parse.User.logIn(userEmail, userPassword, {
+          success: function(user) {
+            loggedIn=true;
+            $('#registerToggle').toggle();
+            $('.signInOutToggle').toggle();
+            $('#switch').text("Welcome back, "+user.getUsername());
           },
-          error: function(error) {
-            alert("Error: " + error.code + " " + error.message);
+          error: function(user, error) {
           }
         });
-      }
-      );
+      });
+        //log out user
+        $('#logOutButton').click(function(){ 
+          Parse.User.logOut();
+          $('#registerToggle').toggle();
+          loggedIn=false;
+          $('#switch').text("Why Mobi?");
+          //nulls out current user object
+           user=Parse.User.current();
+          $('.signInOutToggle').toggle(); 
+        });
     </script>
-  -->
-
 
   </body>
-
 </html>

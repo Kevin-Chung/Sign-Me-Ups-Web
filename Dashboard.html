@@ -51,31 +51,78 @@
             
             </ul><ul class="nav pull-right">
               <li>
-                <a href="Register.html">Register</a>
+                <a href="Register.html" id="registerToggle">Register</a>
               </li>
-                <li class="dropdown">
-                    <a id="dropdownMenu1" class="dropdown-toggle" role="button" data-toggle="dropdown">Sign In
-                        <strong classs="caret"></strong>
-                    </a>
-                    <div class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" style="padding: 15px; padding-bottom: 0px;">
-                      <input id="user_email" type="text" placeholder="Email" />
-                      <input id="user_password" type="password" placeholder="Password" />
-                      <button id="signInBtn" class="btn btn-primary" style="clear: left; width: 100%; height: 32px; font-size: 13px;" type="submit" name="commit">Sign In</button>
-                      <br />
-                      <br />
-                    </div>
+                
+              <li class="signInOutToggle" hidden>
+                <a href="#" role="button" id="logOutButton">Log Out</a>
+              </li>
+
+              <li class="dropdown signInOutToggle">
+                  <a id="dropdownMenu1" class="dropdown-toggle" role="button" data-toggle="dropdown">Sign In
+                      <strong classs="caret"></strong>
+                  </a>
+                  <div class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" style="padding: 15px; padding-bottom: 0px;">
+                    <input id="user_email" type="text" placeholder="Email" />
+                    <input id="user_password" type="password" placeholder="Password" />
+                    <button id="signInBtn" class="btn btn-primary" style="clear: left; width: 100%; height: 32px; font-size: 13px;" type="submit" name="commit">Sign In</button>
+                    <br />
+                    <br />
+                  </div>
                 </li>
             </ul>
           </div>
         </div>
       </div>
     </div>
-    <script>
-    Parse.initialize("QuoI3WPv5g9LyP4awzhZEH8FvRKIgWgFEdFJSTmB", "lsdwkYQTwv0mTcFQWvK33gZ5ISRCCbMfPrA0AJ9j");
-    var user = Parse.User.current();
-    Parse.User.logOut();
-    alert("logged out hoepfully"+user.getUsername());
+    
+
+<script>
+      //initialize parse for CAMPUS SYNERGY
+       Parse.initialize("QuoI3WPv5g9LyP4awzhZEH8FvRKIgWgFEdFJSTmB", "lsdwkYQTwv0mTcFQWvK33gZ5ISRCCbMfPrA0AJ9j");
+       //variable used to check if user is logged in or not
+       loggedIn = false;
+       //check if user session data is already on disk
+       user = Parse.User.current();
+       if(user!=null){
+        loggedIn=true;
+        $('#logOutButton').text("Logout of "+user.getUsername());        
+        $('.signInOutToggle').toggle();
+        $('#registerToggle').toggle();
+      }
+      else{
+        loggedIn=false;
+      }
+
+      $('#signInBtn').click(function() {
+        var userEmail=$("#user_email").val();
+        var userPassword=$("#user_password").val();
+
+        Parse.User.logIn(userEmail, userPassword, {
+          success: function(user) {
+            loggedIn=true;
+            $('#registerToggle').toggle();
+            $('.signInOutToggle').toggle();
+            $('#switch').text("Welcome back, "+user.getUsername());
+          },
+          error: function(user, error) {
+          }
+        });
+      });
+        //log out user
+        $('#logOutButton').click(function(){ 
+          Parse.User.logOut();
+          $('#registerToggle').toggle();
+          loggedIn=false;
+          $('#switch').text("Why Mobi?");
+          //nulls out current user object
+           user=Parse.User.current();
+          $('.signInOutToggle').toggle(); 
+        });
     </script>
+
+
+
     <div>
       <h1> DASHBOARD PAGE</h1>
     </div>
